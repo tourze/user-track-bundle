@@ -43,5 +43,10 @@
     "psr-4": {
       "Tourze\\UserTrackBundle\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tourze\\UserTrackBundle\\Tests\\": "tests"
+    }
   }
 }
