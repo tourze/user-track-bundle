@@ -34,7 +34,9 @@ class UserTrackListener
 
         if ($event->getReceiver() instanceof SystemUser) {
             $log = new TrackLog();
-            $log->setReporter($user);
+            if (!$user instanceof SystemUser) {
+                $log->setReporter($user);
+            }
             $log->setUserId($user->getUserIdentifier());
             $log->setEvent($event->getMessage());
             if (empty($log->getEvent())) {
