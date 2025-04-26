@@ -28,7 +28,7 @@
     "tourze/doctrine-snowflake-bundle": "0.0.*",
     "tourze/user-id-bundle": "0.0.*",
     "tourze/json-rpc-core": "^0.0.6",
-    "tourze/json-rpc-lock-bundle": "0.0.*",
+    "tourze/json-rpc-lock-bundle": "0.1.*",
     "tourze/user-event-bundle": "~0.0.3",
     "tourze/symfony-schedule-entity-clean-bundle": "0.0.*",
     "yiisoft/json": "^1.0"
