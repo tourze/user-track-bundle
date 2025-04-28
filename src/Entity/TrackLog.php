@@ -36,7 +36,7 @@ class TrackLog implements ApiArrayInterface
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
     #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
-    private ?string $id = '0';
+    private ?string $id = null;
 
     #[ListColumn(title: '报告人')]
     #[ORM\ManyToOne(targetEntity: UserInterface::class, fetch: 'EXTRA_LAZY')]
