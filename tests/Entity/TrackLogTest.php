@@ -13,7 +13,7 @@ class TrackLogTest extends TestCase
         $trackLog = new TrackLog();
 
         // 测试ID
-        $this->assertEquals('0', $trackLog->getId());
+        $this->assertEquals(null, $trackLog->getId());
 
         // 测试事件
         $event = 'test.event';
