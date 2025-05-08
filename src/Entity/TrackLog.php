@@ -5,7 +5,6 @@ namespace Tourze\UserTrackBundle\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Attribute\Groups;
 use Tourze\Arrayable\ApiArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineIpBundle\Attribute\CreateIpColumn;
@@ -62,7 +61,6 @@ class TrackLog implements ApiArrayInterface
     #[ListColumn(order: 98, sorter: true)]
     #[ExportColumn]
     #[CreateTimeColumn]
-    #[Groups(['restful_read', 'admin_curd'])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['comment' => '创建时间'])]
     private ?\DateTimeInterface $createTime = null;
 
