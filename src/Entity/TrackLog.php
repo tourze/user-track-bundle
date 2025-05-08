@@ -31,7 +31,6 @@ class TrackLog implements ApiArrayInterface
 {
     #[ExportColumn]
     #[ListColumn(order: -1, sorter: true)]
-    #[Groups(['restful_read', 'admin_curd', 'recursive_view', 'api_tree'])]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
