@@ -59,7 +59,7 @@ class SubmitCrmTrackLog extends LockableProcedure
         return $event->getResult();
     }
 
-    protected function getLockResource(JsonRpcParams $params): ?array
+    public function getLockResource(JsonRpcParams $params): ?array
     {
         if (!$this->security->getUser()) {
             return null;
