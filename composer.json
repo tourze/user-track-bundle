@@ -31,7 +31,7 @@
     "tourze/json-rpc-core": "0.0.*",
     "tourze/json-rpc-lock-bundle": "0.1.*",
     "tourze/symfony-schedule-entity-clean-bundle": "0.1.*",
-    "tourze/user-event-bundle": "~0.0.3",
+    "tourze/user-event-bundle": "0.0.*",
     "tourze/user-id-bundle": "0.1.*",
     "yiisoft/json": "^1.0"
   },
