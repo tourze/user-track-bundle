@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Tourze\DoctrineAsyncInsertBundle\Service\AsyncInsertService;
+use Tourze\DoctrineAsyncInsertBundle\Service\AsyncInsertService as DoctrineService;
 use Tourze\JsonRPC\Core\Attribute\MethodDoc;
 use Tourze\JsonRPC\Core\Attribute\MethodExpose;
 use Tourze\JsonRPC\Core\Attribute\MethodParam;
@@ -27,7 +27,7 @@ class SubmitCrmTrackLog extends LockableProcedure
     public array $params = [];
 
     public function __construct(
-        private readonly AsyncInsertService $doctrineService,
+        private readonly DoctrineService $doctrineService,
         private readonly Security $security,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {
