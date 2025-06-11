@@ -6,7 +6,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Tourze\DoctrineAsyncBundle\Service\DoctrineService;
+use Tourze\DoctrineAsyncInsertBundle\Service\AsyncInsertService;
 use Tourze\UserEventBundle\Event\UserInteractionEvent;
 use Tourze\UserIDBundle\Model\SystemUser;
 use Tourze\UserTrackBundle\Entity\TrackLog;
@@ -15,13 +15,13 @@ use Tourze\UserTrackBundle\EventSubscriber\UserTrackListener;
 
 class UserTrackListenerTest extends TestCase
 {
-    private DoctrineService|MockObject $doctrineService;
+    private AsyncInsertService|MockObject $doctrineService;
     private LoggerInterface|MockObject $logger;
     private UserTrackListener $listener;
 
     protected function setUp(): void
     {
-        $this->doctrineService = $this->createMock(DoctrineService::class);
+        $this->doctrineService = $this->createMock(AsyncInsertService::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->listener = new UserTrackListener(

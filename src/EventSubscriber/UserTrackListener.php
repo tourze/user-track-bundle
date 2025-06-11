@@ -3,7 +3,7 @@
 namespace Tourze\UserTrackBundle\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
-use Tourze\DoctrineAsyncBundle\Service\DoctrineService;
+use Tourze\DoctrineAsyncInsertBundle\Service\AsyncInsertService;
 use Tourze\UserEventBundle\Event\UserInteractionEvent;
 use Tourze\UserIDBundle\Model\SystemUser;
 use Tourze\UserTrackBundle\Entity\TrackLog;
@@ -19,7 +19,7 @@ use Tourze\UserTrackBundle\Event\TrackContextInterface;
 class UserTrackListener
 {
     public function __construct(
-        private readonly DoctrineService $doctrineService,
+        private readonly AsyncInsertService $doctrineService,
         private readonly LoggerInterface $logger,
     ) {
     }

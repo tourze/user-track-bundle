@@ -7,21 +7,21 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Tourze\DoctrineAsyncBundle\Service\DoctrineService;
+use Tourze\DoctrineAsyncInsertBundle\Service\AsyncInsertService;
 use Tourze\JsonRPC\Core\Model\JsonRpcParams;
 use Tourze\UserTrackBundle\Event\TrackLogReportEvent;
 use Tourze\UserTrackBundle\Procedure\SubmitCrmTrackLog;
 
 class SubmitCrmTrackLogTest extends TestCase
 {
-    private DoctrineService|MockObject $doctrineService;
+    private AsyncInsertService|MockObject $doctrineService;
     private Security|MockObject $security;
     private EventDispatcherInterface|MockObject $eventDispatcher;
     private SubmitCrmTrackLog $procedure;
 
     protected function setUp(): void
     {
-        $this->doctrineService = $this->createMock(DoctrineService::class);
+        $this->doctrineService = $this->createMock(AsyncInsertService::class);
         $this->security = $this->createMock(Security::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
