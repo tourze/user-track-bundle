@@ -42,7 +42,7 @@ class UserTrackListener
             if (empty($log->getEvent())) {
                 $log->setEvent(get_class($event));
             }
-            if ($event instanceof TrackContextInterface) {
+            if ((bool) $event instanceof TrackContextInterface) {
                 $log->setParams($event->getTrackingParams());
             }
 

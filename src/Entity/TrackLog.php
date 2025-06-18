@@ -9,34 +9,23 @@ use Tourze\Arrayable\ApiArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineIpBundle\Attribute\CreateIpColumn;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
-use Tourze\DoctrineTimestampBundle\Attribute\CreateTimeColumn;
 use Tourze\EasyAdmin\Attribute\Action\BatchDeletable;
-use Tourze\EasyAdmin\Attribute\Action\Deletable;
-use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
-use Tourze\EasyAdmin\Attribute\Filter\Keyword;
-use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 use Tourze\ScheduleEntityCleanBundle\Attribute\AsScheduleClean;
 use Tourze\UserTrackBundle\Repository\TrackLogRepository;
 use Yiisoft\Json\Json;
 
 #[AsScheduleClean(expression: '20 2 * * *', defaultKeepDay: 30, keepDayEnv: 'CLEAN_TRACK_LOG_DAY_NUM')]
-#[AsPermission(title: '行为轨迹')]
-#[Deletable]
 #[BatchDeletable]
 #[ORM\Entity(repositoryClass: TrackLogRepository::class)]
 #[ORM\Table(name: 'crm_track_log', options: ['comment' => '行为轨迹'])]
 class TrackLog implements ApiArrayInterface
 {
-    #[ExportColumn]
-    #[ListColumn(order: -1, sorter: true)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
     #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
     private ?string $id = null;
 
-    #[ListColumn(title: '报告人')]
     #[ORM\ManyToOne(targetEntity: UserInterface::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?UserInterface $reporter = null;
@@ -45,23 +34,16 @@ class TrackLog implements ApiArrayInterface
     private ?string $userId = null;
 
     #[IndexColumn]
-    #[Keyword]
-    #[ListColumn]
-    #[ORM\Column(type: Types::STRING, length: 255, options: ['comment' => '事件动作'])]
     private ?string $event = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true, options: ['comment' => '事件参数'])]
     private array $params = [];
 
     #[CreateIpColumn]
-    #[ORM\Column(length: 45, nullable: true, options: ['comment' => '创建时IP'])]
     private ?string $createdFromIp = null;
 
     #[IndexColumn]
-    #[ListColumn(order: 98, sorter: true)]
-    #[ExportColumn]
-    #[CreateTimeColumn]
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['comment' => '创建时间'])]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['comment' => '创建时间'])]
     private ?\DateTimeInterface $createTime = null;
 
     public function getId(): ?string
@@ -132,7 +114,6 @@ class TrackLog implements ApiArrayInterface
     /**
      * @throws \JsonException
      */
-    #[ListColumn(title: '参数')]
     public function renderParamsColumn(): string
     {
         return Json::encode($this->getParams());

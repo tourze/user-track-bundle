@@ -67,7 +67,6 @@ class SubmitCrmTrackLogTest extends TestCase
         $result = $this->procedure->execute();
 
         // 验证结果
-        $this->assertIsArray($result);
         $this->assertArrayHasKey('time', $result);
     }
 
@@ -90,7 +89,6 @@ class SubmitCrmTrackLogTest extends TestCase
         $result = $reflectionMethod->invoke($this->procedure, $params);
 
         // 验证结果
-        $this->assertIsArray($result);
         $this->assertCount(1, $result);
         $this->assertEquals('user123-SubmitCrmTrackLog-test.event', $result[0]);
     }

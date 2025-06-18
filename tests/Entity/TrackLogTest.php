@@ -35,7 +35,7 @@ class TrackLogTest extends TestCase
         $this->assertEquals($ip, $trackLog->getCreatedFromIp());
 
         // 测试创建时间
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $this->assertNull($trackLog->getCreateTime());
         $trackLog->setCreateTime($now);
         $this->assertEquals($now, $trackLog->getCreateTime());
@@ -60,7 +60,6 @@ class TrackLogTest extends TestCase
 
         // 测试retrieveApiArray方法
         $apiArray = $trackLog->retrieveApiArray();
-        $this->assertIsArray($apiArray);
         $this->assertArrayHasKey('id', $apiArray);
         $this->assertArrayHasKey('createTime', $apiArray);
         $this->assertArrayHasKey('event', $apiArray);
