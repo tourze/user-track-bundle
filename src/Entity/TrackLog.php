@@ -9,13 +9,11 @@ use Tourze\Arrayable\ApiArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineIpBundle\Attribute\CreateIpColumn;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
-use Tourze\EasyAdmin\Attribute\Action\BatchDeletable;
 use Tourze\ScheduleEntityCleanBundle\Attribute\AsScheduleClean;
 use Tourze\UserTrackBundle\Repository\TrackLogRepository;
 use Yiisoft\Json\Json;
 
 #[AsScheduleClean(expression: '20 2 * * *', defaultKeepDay: 30, keepDayEnv: 'CLEAN_TRACK_LOG_DAY_NUM')]
-#[BatchDeletable]
 #[ORM\Entity(repositoryClass: TrackLogRepository::class)]
 #[ORM\Table(name: 'crm_track_log', options: ['comment' => '行为轨迹'])]
 class TrackLog implements ApiArrayInterface
