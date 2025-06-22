@@ -54,7 +54,6 @@ class TrackLogTest extends TestCase
         $this->assertSame($mockUser, $trackLog->getReporter());
 
         // 测试renderParamsColumn方法
-        $this->assertIsString($trackLog->renderParamsColumn());
         $this->assertStringContainsString('key1', $trackLog->renderParamsColumn());
         $this->assertStringContainsString('value1', $trackLog->renderParamsColumn());
 
@@ -66,5 +65,9 @@ class TrackLogTest extends TestCase
         $this->assertArrayHasKey('params', $apiArray);
         $this->assertArrayHasKey('createdFromIp', $apiArray);
         $this->assertEquals($event, $apiArray['event']);
+
+        // 测试 __toString() 方法
+        $this->assertStringContainsString('TrackLog#', (string) $trackLog);
+        $this->assertStringContainsString($event, (string) $trackLog);
     }
 }

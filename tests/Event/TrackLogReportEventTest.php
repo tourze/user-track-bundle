@@ -19,7 +19,6 @@ class TrackLogReportEventTest extends TestCase
 
         // 测试params属性
         $params = ['key1' => 'value1', 'key2' => 'value2'];
-        $this->assertIsArray($event->getParams());
         $this->assertEmpty($event->getParams());
         $event->setParams($params);
         $this->assertEquals($params, $event->getParams());
@@ -32,7 +31,6 @@ class TrackLogReportEventTest extends TestCase
 
         // 测试result属性
         $result = ['status' => 'success'];
-        $this->assertIsArray($event->getResult());
         $this->assertEmpty($event->getResult());
         $event->setResult($result);
         $this->assertEquals($result, $event->getResult());

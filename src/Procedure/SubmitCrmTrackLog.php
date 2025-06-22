@@ -2,7 +2,7 @@
 
 namespace Tourze\UserTrackBundle\Procedure;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -44,7 +44,7 @@ class SubmitCrmTrackLog extends LockableProcedure
         $log->setParams($this->params);
 
         $result = [
-            'time' => Carbon::now()->getTimestamp(),
+            'time' => CarbonImmutable::now()->getTimestamp(),
         ];
 
         $event = new TrackLogReportEvent();
@@ -61,12 +61,13 @@ class SubmitCrmTrackLog extends LockableProcedure
 
     public function getLockResource(JsonRpcParams $params): ?array
     {
-        if (!$this->security->getUser()) {
+        $user = $this->security->getUser();
+        if (null === $user) {
             return null;
         }
 
         return [
-            "{$this->security->getUser()->getUserIdentifier()}-SubmitCrmTrackLog-" . $params->get('event'),
+            "{$user->getUserIdentifier()}-SubmitCrmTrackLog-" . $params->get('event'),
         ];
     }
 }

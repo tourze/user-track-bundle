@@ -36,14 +36,7 @@ class ListenerCompilerPassTest extends TestCase
         $method->setAccessible(true);
 
         // 创建测试工具特性的替代方法
-        $compilerPass = new class($method) extends ListenerCompilerPass {
-            private \ReflectionMethod $method;
-
-            public function __construct(\ReflectionMethod $method)
-            {
-                $this->method = $method;
-            }
-
+        $compilerPass = new class() extends ListenerCompilerPass {
             public function fetchUserInteractionEvents(ContainerBuilder $container): array
             {
                 return [UserInteractionEvent::class];

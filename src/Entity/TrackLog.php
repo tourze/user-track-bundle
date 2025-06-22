@@ -16,7 +16,7 @@ use Yiisoft\Json\Json;
 #[AsScheduleClean(expression: '20 2 * * *', defaultKeepDay: 30, keepDayEnv: 'CLEAN_TRACK_LOG_DAY_NUM')]
 #[ORM\Entity(repositoryClass: TrackLogRepository::class)]
 #[ORM\Table(name: 'crm_track_log', options: ['comment' => '行为轨迹'])]
-class TrackLog implements ApiArrayInterface
+class TrackLog implements ApiArrayInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -56,7 +56,7 @@ class TrackLog implements ApiArrayInterface
         return $this;
     }
 
-    public function getCreateTime(): ?\DateTimeImmutableImmutable
+    public function getCreateTime(): ?\DateTimeImmutable
     {
         return $this->createTime;
     }
@@ -138,5 +138,10 @@ class TrackLog implements ApiArrayInterface
             'params' => $this->getParams(),
             'createdFromIp' => $this->getCreatedFromIp(),
         ];
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('TrackLog#%s[%s]', $this->getId() ?? 'new', $this->getEvent() ?? 'no-event');
     }
 }
