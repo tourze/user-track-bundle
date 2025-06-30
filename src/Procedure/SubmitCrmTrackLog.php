@@ -15,15 +15,15 @@ use Tourze\JsonRPCLockBundle\Procedure\LockableProcedure;
 use Tourze\UserTrackBundle\Entity\TrackLog;
 use Tourze\UserTrackBundle\Event\TrackLogReportEvent;
 
-#[MethodExpose('SubmitCrmTrackLog')]
-#[MethodDoc('提交足迹日志')]
-#[IsGranted('IS_AUTHENTICATED')]
+#[MethodExpose(method: 'SubmitCrmTrackLog')]
+#[MethodDoc(summary: '提交足迹日志')]
+#[IsGranted(attribute: 'IS_AUTHENTICATED')]
 class SubmitCrmTrackLog extends LockableProcedure
 {
-    #[MethodParam('动作')]
+    #[MethodParam(description: '动作')]
     public string $event;
 
-    #[MethodParam('参数列表')]
+    #[MethodParam(description: '参数列表')]
     public array $params = [];
 
     public function __construct(

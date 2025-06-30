@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Tourze\Arrayable\ApiArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineIpBundle\Attribute\CreateIpColumn;
-use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
+use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
 use Tourze\ScheduleEntityCleanBundle\Attribute\AsScheduleClean;
 use Tourze\UserTrackBundle\Repository\TrackLogRepository;
 use Yiisoft\Json\Json;
@@ -18,11 +18,7 @@ use Yiisoft\Json\Json;
 #[ORM\Table(name: 'crm_track_log', options: ['comment' => '行为轨迹'])]
 class TrackLog implements ApiArrayInterface, \Stringable
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
-    #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
-    private ?string $id = null;
+    use SnowflakeKeyAware;
 
     #[ORM\ManyToOne(targetEntity: UserInterface::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
@@ -44,10 +40,6 @@ class TrackLog implements ApiArrayInterface, \Stringable
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['comment' => '创建时间'])]
     private ?\DateTimeImmutable $createTime = null;
 
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
 
     public function setCreateTime(?\DateTimeImmutable $createdAt): self
     {
