@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserTrackBundle\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
@@ -19,13 +21,22 @@ class TrackLogReportEvent extends Event
         $this->event = $event;
     }
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $params = [];
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getParams(): array
     {
         return $this->params;
     }
 
+    /**
+     * @param array<string, mixed> $params
+     */
     public function setParams(array $params): void
     {
         $this->params = $params;
@@ -43,13 +54,22 @@ class TrackLogReportEvent extends Event
         $this->trackLog = $trackLog;
     }
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $result = [];
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getResult(): array
     {
         return $this->result;
     }
 
+    /**
+     * @param array<string, mixed> $result
+     */
     public function setResult(array $result): void
     {
         $this->result = $result;

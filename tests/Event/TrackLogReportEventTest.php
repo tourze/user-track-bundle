@@ -1,13 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserTrackBundle\Tests\Event;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Tourze\PHPUnitSymfonyUnitTest\AbstractEventTestCase;
 use Tourze\UserTrackBundle\Entity\TrackLog;
 use Tourze\UserTrackBundle\Event\TrackLogReportEvent;
 
-class TrackLogReportEventTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(TrackLogReportEvent::class)]
+final class TrackLogReportEventTest extends AbstractEventTestCase
 {
+    protected function onSetUp(): void
+    {
+        // 这个测试类不需要特殊的初始化逻辑
+    }
+
     public function testEventGetterAndSetter(): void
     {
         $event = new TrackLogReportEvent();

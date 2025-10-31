@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Tourze\UserTrackBundle\DataFixtures\:
+    resource: '../../DataFixtures/*'
+    tags: ['doctrine.fixture.orm']
+
+  # AdminUrlGenerator 的装饰和接口别名已在主应用配置中完成
+  # 不需要在此 bundle 中重复配置

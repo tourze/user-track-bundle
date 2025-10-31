@@ -1,27 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserTrackBundle\Tests;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Tourze\UserTrackBundle\DependencyInjection\ListenerCompilerPass;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractBundleTestCase;
 use Tourze\UserTrackBundle\UserTrackBundle;
 
-class UserTrackBundleTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(UserTrackBundle::class)]
+#[RunTestsInSeparateProcesses]
+final class UserTrackBundleTest extends AbstractBundleTestCase
 {
-    public function testBuild(): void
-    {
-        $bundle = new UserTrackBundle();
-
-        $container = $this->createMock(ContainerBuilder::class);
-
-        // 验证添加编译器
-        $container->expects($this->once())
-            ->method('addCompilerPass')
-            ->with($this->callback(function ($compilerPass) {
-                return $compilerPass instanceof ListenerCompilerPass;
-            }));
-
-        $bundle->build($container);
-    }
 }

@@ -1,21 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserTrackBundle\Tests\DependencyInjection;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Tourze\PHPUnitSymfonyUnitTest\AbstractDependencyInjectionExtensionTestCase;
 use Tourze\UserTrackBundle\DependencyInjection\UserTrackExtension;
 
-class UserTrackExtensionTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(UserTrackExtension::class)]
+final class UserTrackExtensionTest extends AbstractDependencyInjectionExtensionTestCase
 {
-    public function testLoad(): void
-    {
-        $extension = new UserTrackExtension();
-        $container = new ContainerBuilder();
-
-        $extension->load([], $container);
-
-        // 检查是否已注册服务
-        $this->assertTrue($container->has('Tourze\UserTrackBundle\EventSubscriber\UserTrackListener'));
-    }
 }

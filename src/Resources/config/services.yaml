@@ -4,9 +4,17 @@ services:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+  Tourze\UserTrackBundle\Controller\:
+    resource: '../../Controller/'
   Tourze\UserTrackBundle\EventSubscriber\:
     resource: '../../EventSubscriber/'
   Tourze\UserTrackBundle\Procedure\:
     resource: '../../Procedure/'
   Tourze\UserTrackBundle\Repository\:
     resource: '../../Repository/'
+  Tourze\UserTrackBundle\Service\:
+    resource: '../../Service/'
+
+  # Make UserTrackListener public for testing
+  Tourze\UserTrackBundle\EventSubscriber\UserTrackListener:
+    public: true

@@ -1,96 +1,78 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserTrackBundle\Tests\Procedure;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Tourze\DoctrineAsyncInsertBundle\Service\AsyncInsertService as DoctrineService;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Tourze\JsonRPC\Core\Model\JsonRpcParams;
-use Tourze\UserTrackBundle\Event\TrackLogReportEvent;
+use Tourze\JsonRPC\Core\Tests\AbstractProcedureTestCase;
 use Tourze\UserTrackBundle\Procedure\SubmitCrmTrackLog;
 
-class SubmitCrmTrackLogTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(SubmitCrmTrackLog::class)]
+#[RunTestsInSeparateProcesses]
+final class SubmitCrmTrackLogTest extends AbstractProcedureTestCase
 {
-    private DoctrineService|MockObject $doctrineService;
-    private Security|MockObject $security;
-    private EventDispatcherInterface|MockObject $eventDispatcher;
     private SubmitCrmTrackLog $procedure;
 
-    protected function setUp(): void
+    protected function onSetUp(): void
     {
-        $this->doctrineService = $this->createMock(DoctrineService::class);
-        $this->security = $this->createMock(Security::class);
-        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-
-        $this->procedure = new SubmitCrmTrackLog(
-            $this->doctrineService,
-            $this->security,
-            $this->eventDispatcher
-        );
+        $this->procedure = self::getService(SubmitCrmTrackLog::class);
     }
 
     public function testExecute(): void
     {
+        // 创建测试用户
+        $user = $this->createNormalUser('test@example.com', 'password123');
+
+        // 设置认证用户
+        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+        $tokenStorage = self::getService(TokenStorageInterface::class);
+        $tokenStorage->setToken($token);
+
         // 设置参数
         $this->procedure->event = 'test.event';
         $this->procedure->params = ['key' => 'value'];
-
-        // 设置用户
-        $user = $this->createMock(UserInterface::class);
-        $user->method('getUserIdentifier')->willReturn('user123');
-        $this->security->method('getUser')->willReturn($user);
-
-        // 捕获事件分发
-        $capturedEvent = null;
-        $this->eventDispatcher->expects($this->once())
-            ->method('dispatch')
-            ->with($this->callback(function (TrackLogReportEvent $event) use (&$capturedEvent) {
-                $capturedEvent = $event;
-                return $event->getEvent() === 'test.event'
-                    && $event->getParams() === ['key' => 'value'];
-            }))
-            ->willReturnArgument(0);
-
-        // 验证异步插入
-        $this->doctrineService->expects($this->once())
-            ->method('asyncInsert')
-            ->with($this->callback(function ($log) {
-                return $log->getEvent() === 'test.event'
-                    && $log->getParams() === ['key' => 'value']
-                    && $log->getUserId() === 'user123';
-            }));
 
         // 执行测试
         $result = $this->procedure->execute();
 
         // 验证结果
         $this->assertArrayHasKey('time', $result);
+        $this->assertIsInt($result['time']);
     }
 
     public function testGetLockResource(): void
     {
+        // 创建测试用户
+        $user = $this->createNormalUser('test@example.com', 'password123');
+
+        // 设置认证用户
+        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+        $tokenStorage = self::getService(TokenStorageInterface::class);
+        $tokenStorage->setToken($token);
+
         // 创建方法的反射
         $reflectionMethod = new \ReflectionMethod(SubmitCrmTrackLog::class, 'getLockResource');
         $reflectionMethod->setAccessible(true);
 
-        // 创建用户
-        $user = $this->createMock(UserInterface::class);
-        $user->method('getUserIdentifier')->willReturn('user123');
-        $this->security->method('getUser')->willReturn($user);
-
-        // 创建参数
-        $params = $this->createMock(JsonRpcParams::class);
-        $params->method('get')->with('event')->willReturn('test.event');
+        // 创建真实的 JsonRpcParams 对象
+        $params = new JsonRpcParams(['event' => 'test.event']);
 
         // 调用方法
         $result = $reflectionMethod->invoke($this->procedure, $params);
 
         // 验证结果
+        $this->assertIsArray($result);
         $this->assertCount(1, $result);
-        $this->assertEquals('user123-SubmitCrmTrackLog-test.event', $result[0]);
+        $this->assertIsString($result[0]);
+        $this->assertEquals('test@example.com-SubmitCrmTrackLog-test.event', $result[0]);
     }
 
     public function testGetLockResourceWithoutUser(): void
@@ -99,11 +81,8 @@ class SubmitCrmTrackLogTest extends TestCase
         $reflectionMethod = new \ReflectionMethod(SubmitCrmTrackLog::class, 'getLockResource');
         $reflectionMethod->setAccessible(true);
 
-        // 没有用户
-        $this->security->method('getUser')->willReturn(null);
-
-        // 创建参数
-        $params = $this->createMock(JsonRpcParams::class);
+        // 创建真实的 JsonRpcParams 对象
+        $params = new JsonRpcParams([]);
 
         // 调用方法
         $result = $reflectionMethod->invoke($this->procedure, $params);

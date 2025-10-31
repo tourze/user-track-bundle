@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserTrackBundle\Tests\DependencyInjection;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -10,48 +12,83 @@ use Tourze\UserEventBundle\Event\UserInteractionEvent;
 use Tourze\UserTrackBundle\DependencyInjection\ListenerCompilerPass;
 use Tourze\UserTrackBundle\EventSubscriber\UserTrackListener;
 
-class ListenerCompilerPassTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(ListenerCompilerPass::class)]
+final class ListenerCompilerPassTest extends TestCase
 {
-    private ContainerBuilder|MockObject $container;
-    private Definition|MockObject $definition;
-    private ListenerCompilerPass $compilerPass;
+    private ContainerBuilder $container;
+
+    private Definition $definition;
 
     protected function setUp(): void
     {
-        $this->container = $this->createMock(ContainerBuilder::class);
-        $this->definition = $this->createMock(Definition::class);
-        $this->compilerPass = new ListenerCompilerPass();
+        parent::setUp();
 
-        // 设置findDefinition的返回值
-        $this->container->method('findDefinition')
-            ->with(UserTrackListener::class)
-            ->willReturn($this->definition);
+        // 使用真实的 ContainerBuilder
+        $this->container = new ContainerBuilder();
+
+        // 使用真实的 Definition
+        $this->definition = new Definition();
+
+        // 注册定义到容器
+        $this->container->setDefinition(UserTrackListener::class, $this->definition);
     }
 
     public function testProcess(): void
     {
-        // 模拟工具特性的行为
-        $reflection = new \ReflectionClass($this->compilerPass);
-        $method = $reflection->getMethod('fetchUserInteractionEvents');
-        $method->setAccessible(true);
-
         // 创建测试工具特性的替代方法
-        $compilerPass = new class() extends ListenerCompilerPass {
-            public function fetchUserInteractionEvents(ContainerBuilder $container): array
+        $compilerPass = new class extends ListenerCompilerPass {
+            public function fetchUserInteractionEvents(ContainerBuilder $container): iterable
             {
                 return [UserInteractionEvent::class];
             }
         };
 
-        // 期望添加标签
-        $this->definition->expects($this->once())
-            ->method('addTag')
-            ->with('kernel.event_listener', [
-                'event' => UserInteractionEvent::class,
-                'priority' => -10,
-            ]);
-
         // 执行测试
         $compilerPass->process($this->container);
+
+        // 验证标签是否被添加
+        $tags = $this->definition->getTags();
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+
+        $eventListenerTags = $tags['kernel.event_listener'];
+        $this->assertIsArray($eventListenerTags);
+        $this->assertNotEmpty($eventListenerTags);
+
+        $tag = $eventListenerTags[0];
+        $this->assertIsArray($tag);
+        $this->assertArrayHasKey('event', $tag);
+        $this->assertArrayHasKey('priority', $tag);
+        $this->assertEquals(UserInteractionEvent::class, $tag['event']);
+        $this->assertEquals(-10, $tag['priority']);
+    }
+
+    public function testFetchUserInteractionEvents(): void
+    {
+        // 设置真实的 kernel.bundles 参数
+        $this->container->setParameter('kernel.bundles', []);
+
+        // 创建 ListenerCompilerPass 实例并测试 fetchUserInteractionEvents 方法
+        $compilerPass = new ListenerCompilerPass();
+
+        // 使用反射访问 public 方法
+        $reflection = new \ReflectionClass($compilerPass);
+        $method = $reflection->getMethod('fetchUserInteractionEvents');
+        $method->setAccessible(true);
+
+        // 执行方法并获取结果
+        $result = $method->invoke($compilerPass, $this->container);
+
+        // 验证返回值是可迭代的
+        $this->assertIsIterable($result);
+
+        // 将生成器转换为数组以便测试
+        $events = iterator_to_array($result);
+
+        // 验证返回的是数组（空数组，因为没有 Bundle）
+        $this->assertIsArray($events);
+        $this->assertEmpty($events);
     }
 }

@@ -1,13 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserTrackBundle\Tests\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Tourze\PHPUnitDoctrineEntity\AbstractEntityTestCase;
 use Tourze\UserTrackBundle\Entity\TrackLog;
 
-class TrackLogTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(TrackLog::class)]
+final class TrackLogTest extends AbstractEntityTestCase
 {
+    protected function createEntity(): object
+    {
+        return new TrackLog();
+    }
+
+    /**
+     * @return iterable<array{string, mixed}>
+     */
+    public static function propertiesProvider(): iterable
+    {
+        return [
+            'params' => ['params', ['key' => 'value']],
+        ];
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // 这个测试类不需要特殊的初始化逻辑
+    }
+
     public function testGetterAndSetter(): void
     {
         $trackLog = new TrackLog();
@@ -46,12 +76,26 @@ class TrackLogTest extends TestCase
         $trackLog->setUserId($userId);
         $this->assertEquals($userId, $trackLog->getUserId());
 
-        // 测试Reporter用户
-        $mockUser = $this->createMock(UserInterface::class);
-        $mockUser->method('getUserIdentifier')->willReturn($userId);
+        // 测试Reporter用户 - 使用匿名类替代 Mock
+        // @phpstan-ignore-next-line PreferInterfaceStubTraitRule.createTestUser
+        $testUser = new class implements UserInterface {
+            public function getUserIdentifier(): string
+            {
+                return '12345';
+            }
+
+            public function getRoles(): array
+            {
+                return ['ROLE_USER'];
+            }
+
+            public function eraseCredentials(): void
+            {
+            }
+        };
         $this->assertNull($trackLog->getReporter());
-        $trackLog->setReporter($mockUser);
-        $this->assertSame($mockUser, $trackLog->getReporter());
+        $trackLog->setReporter($testUser);
+        $this->assertSame($testUser, $trackLog->getReporter());
 
         // 测试renderParamsColumn方法
         $this->assertStringContainsString('key1', $trackLog->renderParamsColumn());

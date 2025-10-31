@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserTrackBundle\EventSubscriber;
 
+use Monolog\Attribute\WithMonologChannel;
 use Psr\Log\LoggerInterface;
 use Tourze\DoctrineAsyncInsertBundle\Service\AsyncInsertService as DoctrineService;
 use Tourze\UserEventBundle\Event\UserInteractionEvent;
@@ -16,6 +19,7 @@ use Tourze\UserTrackBundle\Event\TrackContextInterface;
  * @see http://www.zhongheinfo.com/hkt.html
  * @see https://www.dkhd.cn/huoke.html
  */
+#[WithMonologChannel(channel: 'user_track')]
 class UserTrackListener
 {
     public function __construct(
@@ -39,7 +43,7 @@ class UserTrackListener
             }
             $log->setUserId($user->getUserIdentifier());
             $log->setEvent($event->getMessage());
-            if (empty($log->getEvent())) {
+            if (null === $log->getEvent() || '' === $log->getEvent()) {
                 $log->setEvent(get_class($event));
             }
             if ($event instanceof TrackContextInterface) {
