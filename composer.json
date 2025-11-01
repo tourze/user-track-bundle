@@ -33,12 +33,12 @@
     "tourze/doctrine-snowflake-bundle": "1.0.*",
     "tourze/easy-admin-menu-bundle": "1.0.*",
     "tourze/json-rpc-core": "1.0.*",
-    "tourze/json-rpc-lock-bundle": "0.1.*",
+    "tourze/json-rpc-lock-bundle": "1.0.*",
     "tourze/symfony-dependency-service-loader": "1.*",
     "tourze/symfony-routing-auto-loader-bundle": "1.0.*",
     "tourze/symfony-schedule-entity-clean-bundle": "1.0.*",
-    "tourze/user-event-bundle": "0.0.*",
-    "tourze/user-id-bundle": "0.1.*",
+    "tourze/user-event-bundle": "1.0.*",
+    "tourze/user-id-bundle": "1.0.*",
     "yiisoft/json": "^1.0"
   },
   "require-dev": {
