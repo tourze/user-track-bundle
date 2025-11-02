@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Tourze\BundleDependency\BundleDependencyInterface;
 use Tourze\DoctrineAsyncInsertBundle\DoctrineAsyncInsertBundle;
+use Tourze\EasyAdminMenuBundle\EasyAdminMenuBundle;
 use Tourze\JsonRPCLockBundle\JsonRPCLockBundle;
 use Tourze\UserTrackBundle\DependencyInjection\ListenerCompilerPass;
 
@@ -27,6 +28,7 @@ class UserTrackBundle extends Bundle implements BundleDependencyInterface
             SecurityBundle::class => ['all' => true],
             JsonRPCLockBundle::class => ['all' => true],
             DoctrineAsyncInsertBundle::class => ['all' => true],
+            EasyAdminMenuBundle::class => ['all' => true],
         ];
     }
 }
