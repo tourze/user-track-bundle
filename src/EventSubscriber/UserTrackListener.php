@@ -20,11 +20,11 @@ use Tourze\UserTrackBundle\Event\TrackContextInterface;
  * @see https://www.dkhd.cn/huoke.html
  */
 #[WithMonologChannel(channel: 'user_track')]
-class UserTrackListener
+readonly class UserTrackListener
 {
     public function __construct(
-        private readonly DoctrineService $doctrineService,
-        private readonly LoggerInterface $logger,
+        private DoctrineService $doctrineService,
+        private LoggerInterface $logger,
     ) {
     }
 
