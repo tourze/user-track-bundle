@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Tourze\BundleDependency\BundleDependencyInterface;
 use Tourze\JsonRPCLockBundle\JsonRPCLockBundle;
 use Tourze\UserTrackBundle\DependencyInjection\ListenerCompilerPass;
+use Tourze\EasyAdminMenuBundle\EasyAdminMenuBundle;
 
 class UserTrackBundle extends Bundle implements BundleDependencyInterface
 {
@@ -25,6 +26,7 @@ class UserTrackBundle extends Bundle implements BundleDependencyInterface
             DoctrineBundle::class => ['all' => true],
             SecurityBundle::class => ['all' => true],
             JsonRPCLockBundle::class => ['all' => true],
+            EasyAdminMenuBundle::class => ['all' => true],
         ];
     }
 }
