@@ -77,7 +77,6 @@ final class TrackLogTest extends AbstractEntityTestCase
         $this->assertEquals($userId, $trackLog->getUserId());
 
         // 测试Reporter用户 - 使用匿名类替代 Mock
-        // @phpstan-ignore-next-line PreferInterfaceStubTraitRule.createTestUser
         $testUser = new class implements UserInterface {
             public function getUserIdentifier(): string
             {

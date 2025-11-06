@@ -7,5 +7,10 @@ services:
     resource: '../../DataFixtures/*'
     tags: ['doctrine.fixture.orm']
 
+  # 为测试环境提供 Mock 的 SnowflakeIdGenerator 服务
+  # 解决 TrackLog 实体使用 SnowflakeKeyAware trait 导致的服务依赖问题
+  Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator:
+    class: Tourze\UserTrackBundle\Tests\Service\MockSnowflakeIdGenerator
+
   # AdminUrlGenerator 的装饰和接口别名已在主应用配置中完成
   # 不需要在此 bundle 中重复配置
