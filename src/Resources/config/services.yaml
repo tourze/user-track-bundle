@@ -18,3 +18,8 @@ services:
   # Make UserTrackListener public for testing
   Tourze\UserTrackBundle\EventSubscriber\UserTrackListener:
     public: true
+
+  # 为测试环境提供 Mock 的 SnowflakeIdGenerator 服务
+  # 解决 TrackLog 实体使用 SnowflakeKeyAware trait 导致的服务依赖问题
+  Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator:
+    class: Tourze\UserTrackBundle\Tests\Service\MockSnowflakeIdGenerator
