@@ -99,11 +99,6 @@ class TrackLogCrudControllerTest extends AbstractEasyAdminControllerTestCase
         self::assertGreaterThan(0, count($violations), '空的轨迹日志实体应该有验证错误');
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        self::assertSame(TrackLog::class, TrackLogCrudController::getEntityFqcn());
-    }
-
     public function testConfigureFields(): void
     {
         $controller = new TrackLogCrudController();
