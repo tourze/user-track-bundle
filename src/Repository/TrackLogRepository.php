@@ -13,7 +13,7 @@ use Tourze\UserTrackBundle\Entity\TrackLog;
  * @extends ServiceEntityRepository<TrackLog>
  */
 #[AsRepository(entityClass: TrackLog::class)]
-class TrackLogRepository extends ServiceEntityRepository
+final class TrackLogRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

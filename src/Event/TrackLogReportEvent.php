@@ -7,7 +7,7 @@ namespace Tourze\UserTrackBundle\Event;
 use Symfony\Contracts\EventDispatcher\Event;
 use Tourze\UserTrackBundle\Entity\TrackLog;
 
-class TrackLogReportEvent extends Event
+final class TrackLogReportEvent extends Event
 {
     private string $event;
 

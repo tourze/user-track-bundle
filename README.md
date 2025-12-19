@@ -43,7 +43,6 @@ Provides automatic event tracking, manual tracking via JSON-RPC, and built-in lo
 - tourze/user-event-bundle
 - tourze/doctrine-snowflake-bundle
 - tourze/doctrine-ip-bundle
-- tourze/json-rpc-core-bundle
 
 ## Installation
 

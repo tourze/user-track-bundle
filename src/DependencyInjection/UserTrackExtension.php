@@ -6,7 +6,7 @@ namespace Tourze\UserTrackBundle\DependencyInjection;
 
 use Tourze\SymfonyDependencyServiceLoader\AutoExtension;
 
-class UserTrackExtension extends AutoExtension
+final class UserTrackExtension extends AutoExtension
 {
     protected function getConfigDir(): string
     {

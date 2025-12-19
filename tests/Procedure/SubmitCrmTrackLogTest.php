@@ -9,7 +9,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Tourze\JsonRPC\Core\Model\JsonRpcParams;
-use Tourze\JsonRPC\Core\Tests\AbstractProcedureTestCase;
+use Tourze\PHPUnitJsonRPC\AbstractProcedureTestCase;
+use Tourze\UserTrackBundle\Param\SubmitCrmTrackLogParam;
 use Tourze\UserTrackBundle\Procedure\SubmitCrmTrackLog;
 
 /**
@@ -36,12 +37,14 @@ final class SubmitCrmTrackLogTest extends AbstractProcedureTestCase
         $tokenStorage = self::getService(TokenStorageInterface::class);
         $tokenStorage->setToken($token);
 
-        // 设置参数
-        $this->procedure->event = 'test.event';
-        $this->procedure->params = ['key' => 'value'];
+        // 创建参数对象
+        $param = new SubmitCrmTrackLogParam(
+            event: 'test.event',
+            params: ['key' => 'value'],
+        );
 
         // 执行测试
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         // 验证结果
         $this->assertArrayHasKey('time', $result);

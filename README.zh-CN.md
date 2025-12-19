@@ -43,7 +43,6 @@
 - tourze/user-event-bundle
 - tourze/doctrine-snowflake-bundle
 - tourze/doctrine-ip-bundle
-- tourze/json-rpc-core-bundle
 
 ## 安装
 

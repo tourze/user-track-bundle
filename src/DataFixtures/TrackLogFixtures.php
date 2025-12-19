@@ -8,7 +8,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Tourze\UserTrackBundle\Entity\TrackLog;
 
-class TrackLogFixtures extends Fixture
+final class TrackLogFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {

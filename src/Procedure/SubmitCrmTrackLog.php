@@ -11,12 +11,14 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Tourze\DoctrineAsyncInsertBundle\Service\AsyncInsertService as DoctrineService;
 use Tourze\JsonRPC\Core\Attribute\MethodDoc;
 use Tourze\JsonRPC\Core\Attribute\MethodExpose;
-use Tourze\JsonRPC\Core\Attribute\MethodParam;
 use Tourze\JsonRPC\Core\Attribute\MethodTag;
+use Tourze\JsonRPC\Core\Contracts\RpcParamInterface;
+use Tourze\JsonRPC\Core\Result\ArrayResult;
 use Tourze\JsonRPC\Core\Model\JsonRpcParams;
 use Tourze\JsonRPCLockBundle\Procedure\LockableProcedure;
 use Tourze\UserTrackBundle\Entity\TrackLog;
 use Tourze\UserTrackBundle\Event\TrackLogReportEvent;
+use Tourze\UserTrackBundle\Param\SubmitCrmTrackLogParam;
 
 #[MethodTag(name: '用户足迹')]
 #[MethodExpose(method: 'SubmitCrmTrackLog')]
@@ -24,13 +26,6 @@ use Tourze\UserTrackBundle\Event\TrackLogReportEvent;
 #[IsGranted(attribute: 'IS_AUTHENTICATED')]
 class SubmitCrmTrackLog extends LockableProcedure
 {
-    #[MethodParam(description: '动作')]
-    public string $event;
-
-    /** @var array<string, mixed> */
-    #[MethodParam(description: '参数列表')]
-    public array $params = [];
-
     public function __construct(
         private readonly DoctrineService $doctrineService,
         private readonly Security $security,
@@ -38,7 +33,10 @@ class SubmitCrmTrackLog extends LockableProcedure
     ) {
     }
 
-    public function execute(): array
+    /**
+     * @phpstan-param SubmitCrmTrackLogParam $param
+     */
+    public function execute(SubmitCrmTrackLogParam|RpcParamInterface $param): ArrayResult
     {
         $user = $this->security->getUser();
 
@@ -49,23 +47,23 @@ class SubmitCrmTrackLog extends LockableProcedure
         $log = new TrackLog();
         $log->setReporter($user);
         $log->setUserId($user->getUserIdentifier());
-        $log->setEvent($this->event);
-        $log->setParams($this->params);
+        $log->setEvent($param->event);
+        $log->setParams($param->params);
 
         $result = [
             'time' => CarbonImmutable::now()->getTimestamp(),
         ];
 
         $event = new TrackLogReportEvent();
-        $event->setEvent($this->event);
-        $event->setParams($this->params);
+        $event->setEvent($param->event);
+        $event->setParams($param->params);
         $event->setTrackLog($log);
         $event->setResult($result);
         $this->eventDispatcher->dispatch($event);
 
         $this->doctrineService->asyncInsert($log);
 
-        return $event->getResult();
+        return new ArrayResult($event->getResult());
     }
 
     public function getLockResource(JsonRpcParams $params): ?array
